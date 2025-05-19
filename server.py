@@ -24,28 +24,35 @@ session = requests.Session()
 session.auth = auth
 common_format_options = "whitespace+enumerate+bitmask+duration"
 
-def make_request(cgi_script: str, params: Optional[Dict]=None) -> Optional[Dict]:
+
+def make_request(cgi_script: str, params: Optional[Dict] = None) -> Optional[Dict]:
     """
     Helper function to make requests to Nagios Core CGI
     """
     if params is None:
         params = {}
 
-    if "details" not in params and (cgi_script == "statusjson.cgi" or cgi_script == "objectjson.cgi"):
+    if "details" not in params and (
+        cgi_script == "statusjson.cgi" or cgi_script == "objectjson.cgi"
+    ):
         if params.get("query", {}).endswith("list"):
             params["details"] = "true"
 
     url = f"{cgi_url}{cgi_script}"
     try:
         response = session.get(url, params=params, timeout=15)
-        response.raise_for_status() # For HTTP errors
+        response.raise_for_status()  # For HTTP errors
         response_json = response.json()
 
-        if response_json.get("result", {}).get("type_code") == 0: # Success
+        if response_json.get("result", {}).get("type_code") == 0:  # Success
             return response_json.get("data", {})
         else:
-            error_message = response_json.get("result", {}).get("message", "Unknown CGI Error")
-            print(f"CGI Error for {cgi_script} with query '{params.get('query')}': {error_message}")
+            error_message = response_json.get("result", {}).get(
+                "message", "Unknown CGI Error"
+            )
+            print(
+                f"CGI Error for {cgi_script} with query '{params.get('query')}': {error_message}"
+            )
             print(f"Full response for debug: {json.dumps(response_json, indent=2)}")
             return None
     except requests.exceptions.HTTPError as e:
@@ -59,14 +66,16 @@ def make_request(cgi_script: str, params: Optional[Dict]=None) -> Optional[Dict]
         print(f"Failed to decode JSON: {e}")
     return None
 
+
 # ------------------- STATUS TOOLS ---------------------
+
 
 @mcp.tool()
 def get_host_status(
-        host_name: Optional[str]=None,
-        host_status_filter: Optional[List]=None,
-        host_group_filter: Optional[List]=None
-    ) -> Optional[Dict]:
+    host_name: Optional[str] = None,
+    host_status_filter: Optional[List | str] = None,
+    host_group_filter: Optional[List | str] = None,
+) -> Optional[Dict]:
     """
     Retrieves status for all hosts or a specific host.
 
@@ -87,7 +96,7 @@ def get_host_status(
         params["query"] = "hostlist"
 
     if host_status_filter and isinstance(host_status_filter, list):
-        params["hoststatus"] = " ".join(host_status_filter) # space separated
+        params["hoststatus"] = " ".join(host_status_filter)  # space separated
     if host_group_filter:
         params["hostgroup"] = host_group_filter
 
@@ -98,14 +107,15 @@ def get_host_status(
         return data.get("hostlist")
     return None
 
+
 @mcp.tool()
 def get_service_status(
-        host_name: Optional[str]=None,
-        service_description: Optional[str]=None,
-        service_status_filter: Optional[List]=None,
-        host_group_filter: Optional[List]=None,
-        service_group_filter: Optional[List]=None
-    ) -> Optional[Dict]:
+    host_name: Optional[str] = None,
+    service_description: Optional[str] = None,
+    service_status_filter: Optional[List | str] = None,
+    host_group_filter: Optional[List | str] = None,
+    service_group_filter: Optional[List | str] = None,
+) -> Optional[Dict]:
     """
     Retrieves status for services using statusjson.cgi.
 
@@ -128,7 +138,7 @@ def get_service_status(
     else:
         params["query"] = "servicelist"
         if host_name:
-            params["hostname"] = host_name # Filter servicelist by host
+            params["hostname"] = host_name  # Filter servicelist by host
 
     if service_status_filter and isinstance(service_status_filter, list):
         params["servicestatus"] = " ".join(service_status_filter)
@@ -144,6 +154,7 @@ def get_service_status(
         return data.get("servicelist")
     return None
 
+
 @mcp.tool()
 def get_alerts() -> Dict:
     """
@@ -154,8 +165,11 @@ def get_alerts() -> Dict:
     """
     alerts = {"hosts": None, "services": None}
     alerts["hosts"] = get_host_status(host_status_filter=["down", "unreachable"])
-    alerts["services"] = get_service_status(service_status_filter=["warning", "critical", "unknown"])
+    alerts["services"] = get_service_status(
+        service_status_filter=["warning", "critical", "unknown"]
+    )
     return alerts
+
 
 @mcp.tool()
 def get_program_status() -> Optional[Dict]:
@@ -169,8 +183,11 @@ def get_program_status() -> Optional[Dict]:
     data = make_request("statusjson.cgi", params=params)
     return data.get("programstatus") if data else None
 
+
 @mcp.tool()
-def get_hosts_in_group_status(host_group_name: str, host_status_filter: Optional[List]=None) -> Optional[Dict]:
+def get_hosts_in_group_status(
+    host_group_name: str, host_status_filter: Optional[List] = None
+) -> Optional[Dict]:
     """
     Retrieves status for all hosts within a specific host group.
 
@@ -180,10 +197,15 @@ def get_hosts_in_group_status(host_group_name: str, host_status_filter: Optional
     Returns:
         - dict or None: Data for hosts in the group, typically from "hostlist".
     """
-    return get_host_status(host_group_filter=host_group_name, host_status_filter=host_status_filter)
+    return get_host_status(
+        host_group_filter=host_group_name, host_status_filter=host_status_filter
+    )
+
 
 @mcp.tool()
-def get_services_in_group_status(service_group_name: str, service_status_filter: Optional[List]=None) -> Optional[Dict]:
+def get_services_in_group_status(
+    service_group_name: str, service_status_filter: Optional[List] = None
+) -> Optional[Dict]:
     """
     Retrieves status for all services within a specific service group.
 
@@ -193,25 +215,28 @@ def get_services_in_group_status(service_group_name: str, service_status_filter:
     Returns:
         - dict or None: Data for servies in the group, typically from "servicelist".
     """
-    return get_service_status(service_group_filter=service_group_name, service_status_filter=service_status_filter)
+    return get_service_status(
+        service_group_filter=service_group_name,
+        service_status_filter=service_status_filter,
+    )
+
 
 @mcp.tool()
 def get_services_on_host_in_group_status(
-        host_group_name: str,
-        host_name: str,
-        service_status_filter: Optional[List]=None
-    ) -> Optional[Dict]:
+    host_group_name: str, host_name: str, service_status_filter: Optional[List] = None
+) -> Optional[Dict]:
     """
     Retrieves status for all the servies with a specific host group.
 
     Returns:
         - dict: Parsed JSON response
     """
-    return get_services_in_group_status(
+    return get_service_status(
         host_name=host_name,
         host_group_filter=host_group_name,
-        service_status_filter=service_status_filter
+        service_status_filter=service_status_filter,
     )
+
 
 @mcp.tool()
 def get_overall_health_summary() -> Dict:
@@ -230,8 +255,9 @@ def get_overall_health_summary() -> Dict:
         summary["service_counts"] = service_data.get("servicecount")
     return summary
 
+
 @mcp.tool()
-def get_unhandled_problems(problem_type: str="all") -> Dict:
+def get_unhandled_problems(problem_type: str = "all") -> Dict:
     """
     Retrieves all the unhandled problems for all the hosts and services.
 
@@ -245,20 +271,30 @@ def get_unhandled_problems(problem_type: str="all") -> Dict:
         hosts = get_host_status(host_status_filter=["down", "unreachable"])
         if hosts:
             for hostname, h_data in hosts.items():
-                if not h_data.get("problem_has_been_acknowledged") and h_data.get("scheduled_downtime_depth", 0) == 0:
+                if (
+                    not h_data.get("problem_has_been_acknowledged")
+                    and h_data.get("scheduled_downtime_depth", 0) == 0
+                ):
                     unhandled["hosts"].append({hostname: h_data})
 
     if problem_type == "all" or problem_type == "service":
-        services = get_service_status(service_status_filter=["warning", "critical", "unknown"])
+        services = get_service_status(
+            service_status_filter=["warning", "critical", "unknown"]
+        )
         if services:
             for hostname, s_dict in services.items():
                 for service_desc, s_data in s_dict.items():
-                    if s_data.get("problem_has_been_acknowledged") and s_data.get("scheduled_downtime_depth", 0) == 0:
+                    if (
+                        s_data.get("problem_has_been_acknowledged")
+                        and s_data.get("scheduled_downtime_depth", 0) == 0
+                    ):
                         unhandled["services"].append({hostname: {service_desc: s_data}})
 
     return unhandled
 
+
 # ------------------- CONFIG TOOLS ---------------------
+
 
 @mcp.tool()
 def get_object_list_config(object_type_plural: str) -> Optional[Dict]:
@@ -279,22 +315,25 @@ def get_object_list_config(object_type_plural: str) -> Optional[Dict]:
         "contacts": "contactlist",
         "contactgroups": "contactgrouplist",
         "timeperiods": "timeperiodlist",
-        "commands": "commandlist"
+        "commands": "commandlist",
     }
     if object_type_plural.lower() not in query_map:
-        print(f"Error: Unsupported object_type_plural for listing: {object_type_plural}")
+        print(
+            f"Error: Unsupported object_type_plural for listing: {object_type_plural}"
+        )
         return None
 
     params = {"query": query_map[object_type_plural.lower()]}
     data = make_request("objectjson.cgi", params=params)
     return data.get(query_map[object_type_plural.lower()]) if data else None
 
+
 @mcp.tool()
 def get_single_object_config(
-        object_type_singular: str,
-        object_name: str,
-        service_description_for_service: Optional[str]=None
-    ) -> Optional[Dict]:
+    object_type_singular: str,
+    object_name: str,
+    service_description_for_service: Optional[str] = None,
+) -> Optional[Dict]:
     """
     Retrieves configuration for a single specific object.
 
@@ -312,7 +351,9 @@ def get_single_object_config(
         params["hostname"] = object_name
     elif type_lower == "service":
         if not service_description_for_service:
-            print("Error: For 'service' config, service_description_for_service is required.")
+            print(
+                "Error: For 'service' config, service_description_for_service is required."
+            )
             return None
         params["hostname"] = object_name
         params["servicedescription"] = service_description_for_service
@@ -329,19 +370,22 @@ def get_single_object_config(
     elif type_lower == "command":
         params["command"] = object_name
     else:
-        print(f"Error: Specific object retrieval for type '{object_type_singular}' "
-              "needs explicit parameter mapping or is not supported by this simplified method.")
+        print(
+            f"Error: Specific object retrieval for type '{object_type_singular}' "
+            "needs explicit parameter mapping or is not supported by this simplified method."
+        )
         return None
 
     data = make_request("objectjson.cgi", params=params)
     return data.get(type_lower) if data else None
 
+
 @mcp.tool()
 def get_host_dependencies(
-        host_name: Optional[str]=None,
-        master_host: Optional[str]=None,
-        dependent_host: Optional[str]=None
-    ) -> Optional[Dict]:
+    host_name: Optional[str] = None,
+    master_host: Optional[str] = None,
+    dependent_host: Optional[str] = None,
+) -> Optional[Dict]:
     """
     Retrieves host dependencies for the given host.
 
@@ -361,13 +405,14 @@ def get_host_dependencies(
         params["dependenthostname"] = dependent_host
     return make_request("statusjson.cgi", params=params)
 
+
 @mcp.tool()
 def get_service_dependencies(
-        host_name: Optional[str]=None,
-        service_description: Optional[str]=None,
-        master_host: Optional[str]=None,
-        master_service_description: Optional[str]=None
-    ) -> Optional[Dict]:
+    host_name: Optional[str] = None,
+    service_description: Optional[str] = None,
+    master_host: Optional[str] = None,
+    master_service_description: Optional[str] = None,
+) -> Optional[Dict]:
     """
     Retrieves service dependencies for the given host.
 
@@ -391,8 +436,11 @@ def get_service_dependencies(
         params["masterservicedescription"] = master_service_description
     return make_request("statusjson.cgi", params=params)
 
+
 @mcp.tool()
-def get_contacts_for_object(object_type: str, object_name: str, service_description: Optional[str]=None) -> Optional[Dict]:
+def get_contacts_for_object(
+    object_type: str, object_name: str, service_description: Optional[str] = None
+) -> Optional[Dict]:
     """
     Retrieves the list of contacts to inform for an object.
 
@@ -421,8 +469,13 @@ def get_contacts_for_object(object_type: str, object_name: str, service_descript
 
     return contact_info
 
+
 @mcp.tool()
-def get_comments(host_name: Optional[str]=None, service_description: Optional[str]=None, limit: int=50) -> Optional[Dict]:
+def get_comments(
+    host_name: Optional[str] = None,
+    service_description: Optional[str] = None,
+    limit: int = 50,
+) -> Optional[Dict]:
     """
     Retrieves comments based on the host and service.
 
@@ -441,6 +494,7 @@ def get_comments(host_name: Optional[str]=None, service_description: Optional[st
     data = make_request("statusjson.cgi", params=params)
     return data.get("commentlist") if data else None
 
+
 @mcp.tool()
 def get_comment_by_id(comment_id: str) -> Optional[Dict]:
     """
@@ -451,16 +505,19 @@ def get_comment_by_id(comment_id: str) -> Optional[Dict]:
     Returns:
         - dict: Parsed JSON response.
     """
-    data = make_request("statusjson.cgi", params={"query": "comment", "commentid": comment_id})
+    data = make_request(
+        "statusjson.cgi", params={"query": "comment", "commentid": comment_id}
+    )
     return data.get("comment") if data else None
+
 
 @mcp.tool()
 def get_downtimes(
-        host_name: Optional[str]=None,
-        service_description: Optional[str]=None,
-        active_only: Optional[bool]=None,
-        limit: int=50
-    ) -> Optional[Dict]:
+    host_name: Optional[str] = None,
+    service_description: Optional[str] = None,
+    active_only: Optional[bool] = None,
+    limit: int = 50,
+) -> Optional[Dict]:
     """
     Retrieves the information for the downtimes in the Nagios Host Process.
 
@@ -483,6 +540,7 @@ def get_downtimes(
     data = make_request("statusjson.cgi", params=params)
     return data.get("downtimelist") if data else None
 
+
 @mcp.tool()
 def get_nagios_process_info() -> Optional[Dict]:
     """
@@ -494,11 +552,18 @@ def get_nagios_process_info() -> Optional[Dict]:
     """
     return get_program_status()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="MCP Server for Nagios")
-    parser.add_argument("--transport", type=str, default="stdio", choices=["stdio", "sse"],
-                        help="Transport Protocol for MCP Server, default=stdio")
+    parser.add_argument(
+        "--transport",
+        type=str,
+        default="stdio",
+        choices=["stdio", "sse"],
+        help="Transport Protocol for MCP Server, default=stdio",
+    )
     args = parser.parse_args()
 
     if args.transport == "sse":
