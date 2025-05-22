@@ -1,6 +1,6 @@
 import logging
 import mcp.types as types
-from typing import Dict, Any, List
+from typing import List
 from mcp.server import Server
 from mcp.server.models import InitializationOptions
 from mcp.server import NotificationOptions
@@ -8,14 +8,17 @@ from mcp.server.stdio import stdio_server
 
 from tools import *
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("nagios-mcp-server")
-logger.info("Starting Nagios MCP Server")
 
+# Create the server instance
 server = Server("nagios-mcp-server")
 
 @server.list_tools()
 async def handle_list_tools() -> List[types.Tool]:
     """List available Nagios MCP Tools"""
+    logging.info("Listing available tools")
     return [
         get_host_status,
         get_service_status,
@@ -38,9 +41,12 @@ async def handle_list_tools() -> List[types.Tool]:
 
 @server.call_tool()
 async def handle_call_tool(name: str, arguments: dict):
+    """Handle tool calls"""
+    logger.info(f"Calling tool: {name} with arguments: {arguments}")
     return handle_tool_calls(name, arguments)
 
 async def main():
+    """Run server with stdio transport - for direct python execution"""
     async with stdio_server() as (read_stream, write_stream):
         logging.info("Server running with stdio transport")
         await server.run(

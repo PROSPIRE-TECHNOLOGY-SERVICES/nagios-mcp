@@ -18,12 +18,12 @@ get_host_status = types.Tool(
                 "description": "Specific host to get status for"
             },
             "host_status_filter": {
-                "type": "list",
+                "type": "array",
                 "description": "List of host statuses to filter by, "
                                 "(e.g., ['down', 'unreachable'])"
             },
             "host_group_filter": {
-                "type": "list",
+                "type": "array",
                 "description": "List of host groups to filter by"
             }
         }
@@ -45,15 +45,15 @@ get_service_status = types.Tool(
                 "description": "Specific service description. If provided with `host_name`, gets status for a single service"
             },
             "service_status_filter": {
-                "type": "list",
+                "type": "array",
                 "description": "List of service statuses to filter by, (e.g., ['warning', 'critical', 'unknown']"
             },
             "host_group_filter": {
-                "type": "list",
+                "type": "array",
                 "description": "List of host groups to filter by"
             },
             "service_group_filter": {
-                "type": "list",
+                "type": "array",
                 "description": "List of service groups to filter by"
             }
         }
@@ -89,7 +89,7 @@ get_hosts_in_group_status = types.Tool(
                 "description": "The name of the host group",
             },
             "host_status_filter": {
-                "type": "list",
+                "type": "array",
                 "description": "Filter for host statuses"
             }
         },
