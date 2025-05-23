@@ -20,7 +20,7 @@ git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
 uv run mcp install server.py
 ```
 
-Create `.env` file with the Nagios Core variables and keep it in the repo
+Create `.env` file with the Nagios Core variables and keep it in the repo or you can define them directly in the `json` below
 ```
 NAGIOS_URL="http://localhost/nagios"
 NAGIOS_USER="your_nagios_core_username"
@@ -33,15 +33,20 @@ NAGIOS_PASS="your_nagios_core_password"
 {
   "mcpServers": {
     "nagios": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
-        "run",
-        "server.py"
-      ]
+        "command": "uv",
+        "args": [
+                "--directory",
+                "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
+                "run",
+                "server.py"
+            ],
+        },
+        "env": {
+            "NAGIOS_URL": "http://localhost/nagios",
+            "NAGIOS_USER": "your_nagios_core_username",
+            "NAGIOS_PASS": "your_nagios_core_password"
+        }
     }
-  }
 }
 ```
 

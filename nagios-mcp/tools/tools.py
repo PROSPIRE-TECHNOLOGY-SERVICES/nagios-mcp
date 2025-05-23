@@ -1,7 +1,10 @@
+import logging
 import mcp.types as types
 from .status_tools import *
 from .config_tools import *
 from typing import List
+
+logger = logging.getLogger("nagios-mcp-server")
 
 # -----------------------------------------------------------------------------
 #                                STATUS TOOLS
@@ -19,11 +22,13 @@ get_host_status = types.Tool(
             },
             "host_status_filter": {
                 "type": "array",
+                "items": {"type": "string"},
                 "description": "List of host statuses to filter by, "
                                 "(e.g., ['down', 'unreachable'])"
             },
             "host_group_filter": {
                 "type": "array",
+                "items": {"type": "string"},
                 "description": "List of host groups to filter by"
             }
         }
@@ -46,14 +51,17 @@ get_service_status = types.Tool(
             },
             "service_status_filter": {
                 "type": "array",
+                "items": {"type": "string"},
                 "description": "List of service statuses to filter by, (e.g., ['warning', 'critical', 'unknown']"
             },
             "host_group_filter": {
                 "type": "array",
+                "items": {"type": "string"},
                 "description": "List of host groups to filter by"
             },
             "service_group_filter": {
                 "type": "array",
+                "items": {"type": "string"},
                 "description": "List of service groups to filter by"
             }
         }
@@ -90,6 +98,7 @@ get_hosts_in_group_status = types.Tool(
             },
             "host_status_filter": {
                 "type": "array",
+                "items": {"type": "string"},
                 "description": "Filter for host statuses"
             }
         },
@@ -108,7 +117,8 @@ get_services_in_group_status = types.Tool(
                 "description": "The name of the service group",
             },
             "service_status_filter": {
-                "type": "list",
+                "type": "array",
+                "items": {"type": "string"},
                 "description": "Filter for service statuses"
             }
         },
@@ -131,7 +141,8 @@ get_services_on_host_in_group_status = types.Tool(
                 "description": "The name of the host"
             },
             "service_status_filter": {
-                "type": "list",
+                "type": "array",
+                "items": {"type": "string"},
                 "description": "Filter for service statuses"
             }
         },
@@ -344,7 +355,7 @@ get_downtimes = types.Tool(
 def handle_tool_calls(tool_name: str, arguments: dict) -> List[types.TextContent]:
     """Handle tool execution requests"""
     try:
-
+        logger.info(f"Executing tool: {tool_name} with arguments: {arguments}")
         if tool_name == "get_host_status":
             host_name = arguments["host_name"] if "host_name" in arguments else None
             host_status_filter = arguments["host_status_filter"] if "host_status_filter" in arguments else None
@@ -497,7 +508,21 @@ def handle_tool_calls(tool_name: str, arguments: dict) -> List[types.TextContent
             return [types.TextContent(type="text", text=str(output))]
 
         else:
-            raise ValueError(f"Unknown tool: {tool_name}")
+            error_msg = f"Unknown tool: {tool_name}"
+            logger.error(error_msg)
+            return [types.TextContent(type="text", text=f"Error: {error_msg}")]
+
+    except ValueError as e:
+        error_msg = f"Invalid arguments for {tool_name}: {str(e)}"
+        logger.error(error_msg)
+        return [types.TextContent(type="text", text=f"Error: {error_msg}")]
+
+    except ConnectionError as e:
+        error_msg = f"Failed to connect to Nagios: {str(e)}"
+        logger.error(error_msg)
+        return [types.TextContent(type="text", text=f"Error: {error_msg}")]
 
     except Exception as e:
-        return [types.TextContent(type="text", text=f"Error: {str(e)}")]
+        error_msg = f"Unexpected error in {tool_name}: {str(e)}"
+        logger.exception(error_msg)
+        return [types.TextContent(type="text", text=f"Error: {error_msg}")]
