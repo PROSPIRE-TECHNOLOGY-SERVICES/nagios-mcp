@@ -29,6 +29,7 @@ NAGIOS_PASS="your_nagios_core_password"
 
 ### For Cursor
 - To setup the server in Cursor, go to `Setting` -> `MCP` -> `Add new global MCP server`, and add the following:
+For STDIO transport:
 ```
 {
   "mcpServers": {
@@ -49,6 +50,20 @@ NAGIOS_PASS="your_nagios_core_password"
     }
 }
 ```
+
+For SSE Transport:
+- First start the server, `uv run nagios_mcp/server.py --transport sse --host localhost --port 8000`
+- Then add the following to the `mcp.json` file:
+```
+{
+    "mcpServers": {
+        "nagios": {
+            "url": "http://localhost:8000/sse"
+        }
+    }
+}
+```
+- NOTE: When using SSE transport don't forget to add the above environment variables, either to the `.env` file or export them as global environment variables.
 
 ### For 5ire
 5ire is another MCP client. For setting up in 5ire, go to `Tools` -> `New` and add the following configuration.
