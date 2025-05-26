@@ -20,7 +20,7 @@ git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
 uv run mcp install server.py
 ```
 
-Create `.env` file with the Nagios Core variables and keep it in the repo
+Create `.env` file with the Nagios Core variables and keep it in the repo or you can define them directly in the `json` below
 ```
 NAGIOS_URL="http://localhost/nagios"
 NAGIOS_USER="your_nagios_core_username"
@@ -29,21 +29,41 @@ NAGIOS_PASS="your_nagios_core_password"
 
 ### For Cursor
 - To setup the server in Cursor, go to `Setting` -> `MCP` -> `Add new global MCP server`, and add the following:
+For STDIO transport:
 ```
 {
   "mcpServers": {
     "nagios": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
-        "run",
-        "server.py"
-      ]
+        "command": "uv",
+        "args": [
+                "--directory",
+                "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
+                "run",
+                "server.py"
+            ],
+        },
+        "env": {
+            "NAGIOS_URL": "http://localhost/nagios",
+            "NAGIOS_USER": "your_nagios_core_username",
+            "NAGIOS_PASS": "your_nagios_core_password"
+        }
     }
-  }
 }
 ```
+
+For SSE Transport:
+- First start the server, `uv run nagios_mcp/server.py --transport sse --host localhost --port 8000`
+- Then add the following to the `mcp.json` file:
+```
+{
+    "mcpServers": {
+        "nagios": {
+            "url": "http://localhost:8000/sse"
+        }
+    }
+}
+```
+- NOTE: When using SSE transport don't forget to add the above environment variables, either to the `.env` file or export them as global environment variables.
 
 ### For 5ire
 5ire is another MCP client. For setting up in 5ire, go to `Tools` -> `New` and add the following configuration.
