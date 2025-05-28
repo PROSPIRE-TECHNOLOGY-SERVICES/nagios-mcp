@@ -1,0 +1,41 @@
+name: Super-Linter
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  super-lint:
+    name: Lint code base
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Full git history is needed to get a proper list of changed files
+          fetch-depth: 0
+
+      - name: Run Super-Linter
+        uses: super-linter/super-linter@v7.4.0
+        env:
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Linter configurations
+          DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: false  # Only validate changed files on PRs
+
+          # Enable Python linting with Ruff
+          VALIDATE_PYTHON_RUFF: true
+
+          VALIDATE_YAML: true
+          VALIDATE_MARKDOWN: true
