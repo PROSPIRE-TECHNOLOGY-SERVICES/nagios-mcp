@@ -1,7 +1,26 @@
 import logging
 import mcp.types as types
-from .status_tools import *
-from .config_tools import *
+from .status_tools import (
+    get_host_status_fn,
+    get_service_status_fn,
+    get_alerts_fn,
+    get_nagios_process_info_fn,
+    get_hosts_in_group_status_fn,
+    get_services_in_group_status_fn,
+    get_services_on_host_in_group_status_fn,
+    get_overall_health_summary_fn,
+    get_unhandled_problems_fn
+)
+from .config_tools import (
+    get_object_list_config_fn,
+    get_single_object_config_fn,
+    get_host_dependencies_fn,
+    get_service_dependencies_fn,
+    get_contacts_for_object_fn,
+    get_comment_by_id_fn,
+    get_comments_fn,
+    get_downtimes_fn
+)
 from typing import List
 
 logger = logging.getLogger("nagios-mcp-server")
