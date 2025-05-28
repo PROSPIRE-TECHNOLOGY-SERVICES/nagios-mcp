@@ -1,9 +1,9 @@
-import os
-from dotenv import load_dotenv
-from typing import Optional, Dict
-
 import json
+import os
+from typing import Dict, Optional
+
 import requests
+from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 
 load_dotenv()

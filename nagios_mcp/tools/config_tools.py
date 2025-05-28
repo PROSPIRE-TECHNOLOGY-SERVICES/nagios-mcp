@@ -1,7 +1,8 @@
-from typing import Optional, Dict
-
 import json
+from typing import Dict, Optional
+
 from .utils import make_request
+
 
 def get_object_list_config_fn(object_type_plural: str) -> Optional[Dict]:
     """
@@ -240,9 +241,9 @@ def get_downtimes_fn(
     return data.get("downtimelist") if data else None
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     print("--- Configuration for ALL Hostgroups ---")
-    hg_configs = get_object_list_config_fn('hostgroups')
+    hg_configs = get_object_list_config_fn("hostgroups")
     if hg_configs:
         for hg_name, config in hg_configs.items():
             print(f"Hostgroup Config: {hg_name}, Alias: {config.get('alias', 'N/A')}")
@@ -252,7 +253,7 @@ if __name__=="__main__":
 
     print("--- Configuration for a SPECIFIC Hostgroup (e.g., 'linux-servers') ---")
     # Replace 'linux-servers' with an actual hostgroup name
-    specific_hg_config = get_single_object_config_fn('hostgroup', 'linux-servers')
+    specific_hg_config = get_single_object_config_fn("hostgroup", "linux-servers")
     if specific_hg_config:
         print(json.dumps(specific_hg_config, indent=2))
     else:
@@ -261,14 +262,18 @@ if __name__=="__main__":
 
     # Add more examples for service groups, contacts, etc. as needed.
     print("--- Configuration for ALL Services ---")
-    all_service_configs = get_object_list_config_fn('services')
+    all_service_configs = get_object_list_config_fn("services")
     if all_service_configs:
         # This can be very verbose
-        print(f"Retrieved {len(all_service_configs)} service configurations. Example for one host if present:")
+        print(
+            f"Retrieved {len(all_service_configs)} service configurations. Example for one host if present:"
+        )
         example_host = next(iter(all_service_configs)) if all_service_configs else None
         if example_host:
             for service_desc, config in all_service_configs[example_host].items():
-                print(f"  Config for {example_host} - {service_desc}: Check command: {config.get('check_command')}")
-                break # Just show one service from one host
+                print(
+                    f"  Config for {example_host} - {service_desc}: Check command: {config.get('check_command')}"
+                )
+                break  # Just show one service from one host
     else:
         print("Could not retrieve all service configurations.")

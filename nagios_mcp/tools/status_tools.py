@@ -1,6 +1,6 @@
-from typing import Optional, Dict, List
-
 import json
+from typing import Dict, List, Optional
+
 from .utils import make_request
 
 
@@ -217,7 +217,8 @@ def get_unhandled_problems_fn(problem_type: str = "all") -> Dict:
 
     return unhandled
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     print("--- Nagios Program Status ---")
     program_status = get_nagios_process_info_fn()
     if program_status:
@@ -249,14 +250,18 @@ if __name__=="__main__":
     if all_services_status:
         for host_name, services in all_services_status.items():
             for service_desc, status_data in services.items():
-                print(f"Host: {host_name}, Service: {service_desc}, Status: {status_data.get('status', 'N/A')}")
+                print(
+                    f"Host: {host_name}, Service: {service_desc}, Status: {status_data.get('status', 'N/A')}"
+                )
     else:
         print("Could not retrieve all service statuses.")
     print("\n")
 
     print("--- Specific Service Status (e.g., SSH on localhost) ---")
     # Replace 'localhost' and 'SSH' with actual host/service
-    ping_status = get_service_status_fn(host_name="localhost", service_description="SSH")
+    ping_status = get_service_status_fn(
+        host_name="localhost", service_description="SSH"
+    )
     if ping_status:
         print(json.dumps(ping_status, indent=2))
     else:
@@ -266,26 +271,32 @@ if __name__=="__main__":
     print("--- Current Alerts (Problems) ---")
     alerts = get_alerts_fn()
     print("Problem Hosts:")
-    if alerts.get('hosts'):
-        for host_name, host_data in alerts['hosts'].items():
-            print(f"  Host: {host_name}, Status: {host_data.get('status')}, Output: {host_data.get('plugin_output')}")
+    if alerts.get("hosts"):
+        for host_name, host_data in alerts["hosts"].items():
+            print(
+                f"  Host: {host_name}, Status: {host_data.get('status')}, Output: {host_data.get('plugin_output')}"
+            )
     else:
         print("  No problem hosts found or error retrieving.")
     print("Problem Services:")
-    if alerts.get('services'):
-        for host_name, services in alerts['services'].items():
+    if alerts.get("services"):
+        for host_name, services in alerts["services"].items():
             for service_desc, service_data in services.items():
-                 print(f"  Host: {host_name}, Service: {service_desc}, Status: {service_data.get('status')}, Output: {service_data.get('plugin_output')}")
+                print(
+                    f"  Host: {host_name}, Service: {service_desc}, Status: {service_data.get('status')}, Output: {service_data.get('plugin_output')}"
+                )
     else:
         print("  No problem services found or error retrieving.")
     print("\n")
 
     print("--- Status of Hosts in Group 'linux-servers' ---")
     # Replace 'linux-servers' with an actual hostgroup name
-    hosts_in_group = get_hosts_in_group_status_fn('linux-servers')
+    hosts_in_group = get_hosts_in_group_status_fn("linux-servers")
     if hosts_in_group:
         for host_name, status_data in hosts_in_group.items():
-            print(f"Host in Group: {host_name}, Status: {status_data.get('status', 'N/A')}")
+            print(
+                f"Host in Group: {host_name}, Status: {status_data.get('status', 'N/A')}"
+            )
     else:
         print("Could not retrieve status for hosts in group 'linux-servers'.")
     print("\n")

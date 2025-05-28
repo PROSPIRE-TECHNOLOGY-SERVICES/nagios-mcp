@@ -2,9 +2,9 @@ name: Super-Linter
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
 
 jobs:
   super-lint:
@@ -34,8 +34,7 @@ jobs:
           DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: true  # Only validate changed files on PRs
 
-          # Enable Python linting with Ruff
+          # Enable linting
           VALIDATE_PYTHON_RUFF: true
-
           VALIDATE_YAML: true
           VALIDATE_MARKDOWN: true

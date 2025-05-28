@@ -1,37 +1,36 @@
-import logging
-import mcp.types as types
-from typing import List
-from mcp.server import Server
-from mcp.server.models import InitializationOptions
-from mcp.server import NotificationOptions
-from mcp.server.stdio import stdio_server
-from mcp.server.sse import SseServerTransport
-import uvicorn
-from starlette.applications import Starlette
-from starlette.routing import Route, Mount
-from starlette.responses import Response
 import argparse
-from dotenv import load_dotenv
+import logging
+from typing import List
 
+import mcp.types as types
+import uvicorn
+from dotenv import load_dotenv
+from mcp.server import NotificationOptions, Server
+from mcp.server.models import InitializationOptions
+from mcp.server.sse import SseServerTransport
+from mcp.server.stdio import stdio_server
+from starlette.applications import Starlette
+from starlette.responses import Response
+from starlette.routing import Mount, Route
 from tools import (
-    get_host_status,
-    get_service_status,
     get_alerts,
+    get_comment_by_id,
+    get_comments,
+    get_contacts_for_object,
+    get_downtimes,
+    get_host_dependencies,
+    get_host_status,
     get_hosts_in_group_status,
-    get_services_in_group_status,
-    get_services_on_host_in_group_status,
-    get_overall_health_summary,
-    get_unhandled_problems,
     get_nagios_process_info,
     get_object_list_config,
-    get_single_object_config,
-    get_host_dependencies,
+    get_overall_health_summary,
     get_service_dependencies,
-    get_contacts_for_object,
-    get_comments,
-    get_comment_by_id,
-    get_downtimes,
-    handle_tool_calls
+    get_service_status,
+    get_services_in_group_status,
+    get_services_on_host_in_group_status,
+    get_single_object_config,
+    get_unhandled_problems,
+    handle_tool_calls,
 )
 
 load_dotenv()
@@ -42,6 +41,7 @@ logger = logging.getLogger("nagios-mcp-server")
 
 # Create the server instance
 server = Server("nagios-mcp-server")
+
 
 @server.list_tools()
 async def handle_list_tools() -> List[types.Tool]:
@@ -64,14 +64,16 @@ async def handle_list_tools() -> List[types.Tool]:
         get_contacts_for_object,
         get_comments,
         get_comment_by_id,
-        get_downtimes
+        get_downtimes,
     ]
+
 
 @server.call_tool()
 async def handle_call_tool(name: str, arguments: dict):
     """Handle tool calls"""
     logger.info(f"Calling tool: {name} with arguments: {arguments}")
     return handle_tool_calls(name, arguments)
+
 
 async def run_stdio():
     """Run server with stdio transport"""
@@ -85,12 +87,13 @@ async def run_stdio():
                 server_version="0.1.0",
                 capabilities=server.get_capabilities(
                     notification_options=NotificationOptions(),
-                    experimental_capabilities={}
-                )
-            )
+                    experimental_capabilities={},
+                ),
+            ),
         )
 
-async def run_sse(host: str="localhost", port: int=8000):
+
+async def run_sse(host: str = "localhost", port: int = 8000):
     """Run server with sse transport"""
 
     # Create SSE Server app
@@ -110,9 +113,9 @@ async def run_sse(host: str="localhost", port: int=8000):
                     server_version="0.1.0",
                     capabilities=server.get_capabilities(
                         notification_options=NotificationOptions(),
-                        experimental_capabilities={}
-                    )
-                )
+                        experimental_capabilities={},
+                    ),
+                ),
             )
         # returning empty response to avoid NoneType error
         return Response()
@@ -120,7 +123,7 @@ async def run_sse(host: str="localhost", port: int=8000):
     # Create Starlette routes
     routes = [
         Route("/sse", endpoint=handle_sse, methods=["GET"]),
-        Mount("/messages", app=sse_transport.handle_post_message)
+        Mount("/messages", app=sse_transport.handle_post_message),
     ]
 
     # Create Starlette app
@@ -130,15 +133,11 @@ async def run_sse(host: str="localhost", port: int=8000):
     logging.info(f"SSE endpoint: http://{host}:{port}/sse")
 
     # Configure and run uvicorn
-    config = uvicorn.Config(
-        app=app,
-        host=host,
-        port=port,
-        log_level="info"
-    )
+    config = uvicorn.Config(app=app, host=host, port=port, log_level="info")
 
     server_instance = uvicorn.Server(config)
     await server_instance.serve()
+
 
 async def main():
     """Main entrypoint"""
@@ -147,18 +146,18 @@ async def main():
         "--transport",
         choices=["stdio", "sse"],
         default="stdio",
-        help="Transport method to use (default: stdio)"
+        help="Transport method to use (default: stdio)",
     )
     parser.add_argument(
         "--host",
         default="localhost",
-        help="Host to bind to for SSE transport (default: localhost)"
+        help="Host to bind to for SSE transport (default: localhost)",
     )
     parser.add_argument(
         "--port",
         type=int,
         default=8000,
-        help="Port to bind to for SSE transport (default: 8000)"
+        help="Port to bind to for SSE transport (default: 8000)",
     )
 
     args = parser.parse_args()
@@ -168,7 +167,8 @@ async def main():
     else:
         await run_stdio()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     import asyncio
     import sys
 
