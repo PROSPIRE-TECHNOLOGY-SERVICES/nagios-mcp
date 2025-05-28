@@ -32,7 +32,7 @@ jobs:
 
           # Linter configurations
           DEFAULT_BRANCH: main
-          VALIDATE_ALL_CODEBASE: false  # Only validate changed files on PRs
+          VALIDATE_ALL_CODEBASE: true  # Only validate changed files on PRs
 
           # Enable Python linting with Ruff
           VALIDATE_PYTHON_RUFF: true
