@@ -12,15 +12,15 @@ More specifically the `statusjson.cgi` and `objectjson.cgi` files for the purpos
 ### Setting up
 
 - Installing `uv`
-    - Linux or MacOS:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+    - Linux or MacOS or WSL:
+      ```bash
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+      ```
     - Windows:
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+      ```
+      powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+      ```
 
-```
 Or installing using `pip`:
 ```bash
 pip install uv
@@ -31,6 +31,7 @@ pip install uv
 git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
 ```
 
+- Creating a config file
 Create a `nagios_config.yaml` or `nagios_config.json` file with the configuration parameters given below.
 
 ```yaml
