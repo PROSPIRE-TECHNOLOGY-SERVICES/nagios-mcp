@@ -1,31 +1,48 @@
 import json
-import os
 from typing import Dict, Optional
 
 import requests
-from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 
-load_dotenv()
-
-NAGIOS_URL = os.environ.get("NAGIOS_URL")
-NAGIOS_USER = os.environ.get("NAGIOS_USER")
-NAGIOS_PASS = os.environ.get("NAGIOS_PASS")
-
-if NAGIOS_URL is not None and NAGIOS_URL.endswith("/"):
-    cgi_url = f"{NAGIOS_URL}" + "cgi-bin/"
-else:
-    cgi_url = f"{NAGIOS_URL}" + "/cgi-bin/"
-auth = HTTPBasicAuth(NAGIOS_USER, NAGIOS_PASS)
-session = requests.Session()
-session.auth = auth
+NAGIOS_URL = None
+NAGIOS_USER = None
+NAGIOS_PASS = None
+cgi_url = None
+auth = None
+session = None
 common_format_options = "whitespace+enumerate+bitmask+duration"
 
+
+def initialize_nagios_config(nagios_url: str, nagios_user: str, nagios_pass: str):
+    """Initialize Nagios Configuration from provided parameters"""
+    global NAGIOS_URL, NAGIOS_USER, NAGIOS_PASS, cgi_url, auth, session
+
+    NAGIOS_URL = nagios_url
+    NAGIOS_USER = nagios_user
+    NAGIOS_PASS = nagios_pass
+
+    if NAGIOS_URL is not None and NAGIOS_URL.endswith("/"):
+        cgi_url = f"{NAGIOS_URL}" + "cgi-bin/"
+    else:
+        cgi_url = f"{NAGIOS_URL}" + "/cgi-bin/"
+
+    auth = HTTPBasicAuth(NAGIOS_USER, NAGIOS_PASS)
+    session = requests.session()
+    session.auth = auth
+
+def _check_config():
+    """Check if configuration has been initialized"""
+    if NAGIOS_URL is None or NAGIOS_USER is None or NAGIOS_PASS is None:
+        raise RuntimeError(
+            "Nagios configuration not initlilized",
+            "Make sure to run the server with a valid config file."
+        )
 
 def make_request(cgi_script: str, params: Optional[Dict] = None) -> Optional[Dict]:
     """
     Helper function to make requests to Nagios Core CGI
     """
+    _check_config() # ensure config is initialized
     if params is None:
         params = {}
 

@@ -18,19 +18,17 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Clone the repo
 git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
 
-# Run the following line to install directly to Claude Desktop
-uv run mcp install server.py
 ```
 
-Create `.env` file with the Nagios Core variables and keep it in the repo or you can define them directly in the `json` below
+Create a `config.yaml` or `config.json` file with the configuration parameters given below.
 
-```
-NAGIOS_URL="http://localhost/nagios"
-NAGIOS_USER="your_nagios_core_username"
-NAGIOS_PASS="your_nagios_core_password"
+```yaml
+nagios_url: "http://localhost/nagios"
+nagios_user: "your_nagios_core_username"
+nagios_pass: "your_nagios_core_password"
 ```
 
-### For Cursor
+### For Cursor or Claude Desktop
 
 - To setup the server in Cursor, go to `Setting` -> `MCP` -> `Add new global MCP server`, and add the following:
   For STDIO transport:
@@ -44,13 +42,10 @@ NAGIOS_PASS="your_nagios_core_password"
                 "--directory",
                 "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
                 "run",
-                "server.py"
+                "-m",
+                "nagios_mcp",
+                "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
             ],
-        },
-        "env": {
-            "NAGIOS_URL": "http://localhost/nagios",
-            "NAGIOS_USER": "your_nagios_core_username",
-            "NAGIOS_PASS": "your_nagios_core_password"
         }
     }
 }
@@ -58,7 +53,7 @@ NAGIOS_PASS="your_nagios_core_password"
 
 For SSE Transport:
 
-- First start the server, `uv run nagios_mcp/server.py --transport sse --host localhost --port 8000`
+- First start the server, `uv run -m nagios_mcp --config NAGIOS_CONFIG_FILE --transport sse --host localhost --port 8000`
 - Then add the following to the `mcp.json` file:
 
 ```
