@@ -1,3 +1,9 @@
+# Nagios config files
+nagios_config.yaml
+nagios_config.json
+config.yaml
+config.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       packages: read
       # To report GitHub Actions status checks
       statuses: write
@@ -38,3 +38,18 @@ jobs:
           VALIDATE_PYTHON_RUFF: true
           VALIDATE_YAML: true
           VALIDATE_MARKDOWN: true
+
+          # Enable auto-formatting
+          FIX_PYTHON_RUFF: true
+          FIX_YAML_PRETTIER: true
+          FIX_MARKDOWN_PRETTIER: true
+
+      - name: Commit and push linting fixes
+        if: github.event_name == "pull_request" || (github.event_name == "push" && github.ref != "refs/heads/main")
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: Auto-Format code with Super-Linter"
+          branch: ${{ github.head_ref || github.ref_name }} # Pushes to the branch that triggered the workflow
+          commit_user_name: "Github Actions (Super-Linter)"
+          commit_user_email: "actions@github.com"
+          commit_author: "Github Actions (Super-Linter) <actions@github.com>"
