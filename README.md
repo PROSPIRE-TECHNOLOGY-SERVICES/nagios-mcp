@@ -11,7 +11,7 @@ More specifically the `statusjson.cgi` and `objectjson.cgi` files for the purpos
 
 ### Setting up
 
-- Installing `uv`
+1. Installing `uv`
     - Linux or MacOS or WSL:
       ```bash
       curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -26,12 +26,12 @@ Or installing using `pip`:
 pip install uv
 ```
 
-- Cloning the repository
+2. Cloning the repository
 ```
 git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
 ```
 
-- Creating a config file
+3. Creating a config file
 Create a `nagios_config.yaml` or `nagios_config.json` file with the configuration parameters given below.
 
 ```yaml
@@ -52,7 +52,7 @@ nagios_pass: "your_nagios_core_password"
     - MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
     - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 - Add the following block to the config file,
-```json
+```jsonc
 {
     "mcpServers": {
         "nagios": {
@@ -69,7 +69,7 @@ nagios_pass: "your_nagios_core_password"
 }
 ```
 - For SSE transport:
-```json
+```jsonc
 {
     "mcpServers": {
         "nagios": {
@@ -84,7 +84,7 @@ nagios_pass: "your_nagios_core_password"
 - [Official setup guide](https://docs.cursor.com/context/model-context-protocol)
 - To setup the server in [Cursor](https://www.cursor.com/), go to `Setting` -> `MCP` -> `Add new global MCP server`, and add the following:
   For STDIO transport:
-```json
+```jsonc
 {
   "mcpServers": {
     "nagios": {
@@ -102,7 +102,7 @@ nagios_pass: "your_nagios_core_password"
 }
 ```
 - For SSE Transport:
-```json
+```jsonc
 {
     "mcpServers": {
         "nagios": {
@@ -116,7 +116,7 @@ nagios_pass: "your_nagios_core_password"
 
 - [Official setup guide](https://docs.windsurf.com/windsurf/cascade/mcp)
 - For setting up the server in [Windsurf](https://windsurf.com/), add the following lines to the `~/.codeium/windsurf/mcp_config.json` file.
-```json
+```jsonc
 {
     "mcpServers": {
         "nagios": {
@@ -134,7 +134,7 @@ nagios_pass: "your_nagios_core_password"
 }
 ```
 - For SSE Transport:
-```json
+```jsonc
 {
     "mcpServers": {
         "nagios": {
@@ -148,7 +148,7 @@ nagios_pass: "your_nagios_core_password"
 
 - [Official setup guide](https://docs.cline.bot/mcp/configuring-mcp-servers)
 - For setting up the server in [Cline](https://cline.bot/), go to `MCP Servers` -> `Installed` -> `Configure MCP Servers`, this will open the `cline_mcp_settings.json` file. Add the following code block to the file.
-```json
+```jsonc
 {
     "mcpServers": {
         "nagios": {
@@ -166,7 +166,7 @@ nagios_pass: "your_nagios_core_password"
 }
 ```
 - For SSE Transport:
-```json
+```jsonc
 {
     "mcpServers": {
         "nagios": {
