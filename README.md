@@ -9,18 +9,29 @@ More specifically the `statusjson.cgi` and `objectjson.cgi` files for the purpos
 
 ## How to install:
 
-### For Claude Desktop
+### Setting up
 
-```
-# If uv is not installed
+- Installing `uv`
+    - Linux or MacOS:
+```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Clone the repo
-git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
+```
+    - Windows:
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 ```
+Or installing using `pip`:
+```bash
+pip install uv
+```
 
-Create a `config.yaml` or `config.json` file with the configuration parameters given below.
+- Cloning the repository
+```
+git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
+```
+
+Create a `nagios_config.yaml` or `nagios_config.json` file with the configuration parameters given below.
 
 ```yaml
 nagios_url: "http://localhost/nagios"
@@ -28,12 +39,51 @@ nagios_user: "your_nagios_core_username"
 nagios_pass: "your_nagios_core_password"
 ```
 
-### For Cursor or Claude Desktop
+### Starting the SSE server
 
-- To setup the server in Cursor, go to `Setting` -> `MCP` -> `Add new global MCP server`, and add the following:
-  For STDIO transport:
+- The mcp server by default runs on STDIO transport. If you do not require SSE transport, you can skip this section.
+- Command: `uv run -m nagios_mcp --config NAGIOS_CONFIG_FILE --transport sse --host localhost --port 8000`
 
+### For Claude Desktop
+
+- [Official setup guide](https://modelcontextprotocol.io/quickstart/user#mac-os-linux)
+- For setting up in [Claude Desktop](https://claude.ai/download), go to `Settings` -> `Developer` -> `Edit Config`. Or directly modify the config file,
+    - MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- Add the following block to the config file,
+```json
+{
+    "mcpServers": {
+        "nagios": {
+            "command": "uv",
+            "args": [
+                "--directory", "/ABSOLUTE_PATH_TO/nagios-mcp",
+                "run",
+                "-m",
+                "nagios_mcp",
+                "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
+            ]
+        }
+    }
+}
 ```
+- For SSE transport:
+```json
+{
+    "mcpServers": {
+        "nagios": {
+            "url": "http://localhost:8000/sse" # change this if you are using different port
+        }
+    }
+}
+```
+
+### For Cursor
+
+- [Official setup guide](https://docs.cursor.com/context/model-context-protocol)
+- To setup the server in [Cursor](https://www.cursor.com/), go to `Setting` -> `MCP` -> `Add new global MCP server`, and add the following:
+  For STDIO transport:
+```json
 {
   "mcpServers": {
     "nagios": {
@@ -50,23 +100,80 @@ nagios_pass: "your_nagios_core_password"
     }
 }
 ```
-
-For SSE Transport:
-
-- First start the server, `uv run -m nagios_mcp --config NAGIOS_CONFIG_FILE --transport sse --host localhost --port 8000`
-- Then add the following to the `mcp.json` file:
-
-```
+- For SSE Transport:
+```json
 {
     "mcpServers": {
         "nagios": {
-            "url": "http://localhost:8000/sse"
+            "url": "http://localhost:8000/sse" # change this if you are using different port
         }
     }
 }
 ```
 
-- NOTE: When using SSE transport don't forget to add the above environment variables, either to the `.env` file or export them as global environment variables.
+### For Windsurf
+
+- [Official setup guide](https://docs.windsurf.com/windsurf/cascade/mcp)
+- For setting up the server in [Windsurf](https://windsurf.com/), add the following lines to the `~/.codeium/windsurf/mcp_config.json` file.
+```json
+{
+    "mcpServers": {
+        "nagios": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
+                "run",
+                "-m",
+                "nagios_mcp",
+                "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
+            ],
+        }
+    }
+}
+```
+- For SSE Transport:
+```json
+{
+    "mcpServers": {
+        "nagios": {
+            "serverUrl": "http://localhost:8000/sse" # change this if you are using different port
+        }
+    }
+}
+```
+
+### For Cline
+
+- [Official setup guide](https://docs.cline.bot/mcp/configuring-mcp-servers)
+- For setting up the server in [Cline](https://cline.bot/), go to `MCP Servers` -> `Installed` -> `Configure MCP Servers`, this will open the `cline_mcp_settings.json` file. Add the following code block to the file.
+```json
+{
+    "mcpServers": {
+        "nagios": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
+                "run",
+                "-m",
+                "nagios_mcp",
+                "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
+            ],
+        }
+    }
+}
+```
+- For SSE Transport:
+```json
+{
+    "mcpServers": {
+        "nagios": {
+            "url": "http://localhost:8000/sse" # change this if you are using different port
+        }
+    }
+}
+```
 
 ### For 5ire
 
@@ -74,7 +181,7 @@ For SSE Transport:
 
 1. Tool Key: `Nagios`
 2. Name: `NagiosMCP`
-3. Command: `uv --directory /ABSOLUTE_PATH_TO/nagios-mcp run server.py`
+3. Command: `uv --directory /ABSOLUTE_PATH_TO/nagios-mcp run -m nagios_mcp --config PATH_TO_THE_NAGIOS_CONFIG_FILE`
 
 ### List of Tools:
 
