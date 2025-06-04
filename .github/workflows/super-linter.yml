@@ -29,11 +29,11 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LOG_LEVEL: DEBUG
+          # LOG_LEVEL: DEBUG
 
           # Linter configurations
           DEFAULT_BRANCH: main
-          VALIDATE_ALL_CODEBASE: true  # Only validate changed files on PRs
+          VALIDATE_ALL_CODEBASE: false  # Only validate changed files on PRs
 
           # Enable linting
           VALIDATE_PYTHON_RUFF: true
@@ -42,6 +42,9 @@ jobs:
           # Enable auto-formatting
           FIX_PYTHON_RUFF: true
           FIX_MARKDOWN_PRETTIER: true
+
+          # Config file
+          PYTHON_RUFF_CONFIG_FILE: .ruff.toml
 
       - name: Commit and push linting fixes
         if: github.event_name == 'pull_request' && github.ref_name != github.event.repository.default_branch
