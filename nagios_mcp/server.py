@@ -34,7 +34,7 @@ from .tools import (
     get_unhandled_problems,
     handle_tool_calls,
 )
-from .tools.utils import initialize_nagios_config, make_request
+from .tools.utils import initialize_nagios_config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

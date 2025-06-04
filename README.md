@@ -12,27 +12,29 @@ More specifically the `statusjson.cgi` and `objectjson.cgi` files for the purpos
 ### Setting up
 
 1. Installing `uv`
-    - Linux or MacOS or WSL:
-      ```bash
-      curl -LsSf https://astral.sh/uv/install.sh | sh
-      ```
-    - Windows:
-      ```
-      powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-      ```
+   - Linux or MacOS or WSL:
+     ```bash
+     curl -LsSf https://astral.sh/uv/install.sh | sh
+     ```
+   - Windows:
+     ```
+     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+     ```
 
 Or installing using `pip`:
+
 ```bash
 pip install uv
 ```
 
 2. Cloning the repository
+
 ```
 git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
 ```
 
 3. Creating a config file
-Create a `nagios_config.yaml` or `nagios_config.json` file with the configuration parameters given below.
+   Create a `nagios_config.yaml` or `nagios_config.json` file with the configuration parameters given below.
 
 ```yaml
 nagios_url: "http://localhost/nagios"
@@ -49,26 +51,31 @@ nagios_pass: "your_nagios_core_password"
 
 - [Official setup guide](https://modelcontextprotocol.io/quickstart/user#mac-os-linux)
 - For setting up in [Claude Desktop](https://claude.ai/download), go to `Settings` -> `Developer` -> `Edit Config`. Or directly modify the config file,
-    - MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+  - MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+  - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 - Add the following block to the config file,
+
 ```jsonc
 {
-    "mcpServers": {
-        "nagios": {
-            "command": "uv",
-            "args": [
-                "--directory", "/ABSOLUTE_PATH_TO/nagios-mcp",
-                "run",
-                "-m",
-                "nagios_mcp",
-                "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
-            ]
-        }
-    }
+  "mcpServers": {
+    "nagios": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ABSOLUTE_PATH_TO/nagios-mcp",
+        "run",
+        "-m",
+        "nagios_mcp",
+        "--config",
+        "PATH_TO_THE_NAGIOS_CONFIG_FILE",
+      ],
+    },
+  },
 }
 ```
+
 - For SSE transport:
+
 ```jsonc
 {
     "mcpServers": {
@@ -84,6 +91,7 @@ nagios_pass: "your_nagios_core_password"
 - [Official setup guide](https://docs.cursor.com/context/model-context-protocol)
 - To setup the server in [Cursor](https://www.cursor.com/), go to `Setting` -> `MCP` -> `Add new global MCP server`, and add the following:
   For STDIO transport:
+
 ```jsonc
 {
   "mcpServers": {
@@ -101,7 +109,9 @@ nagios_pass: "your_nagios_core_password"
     }
 }
 ```
+
 - For SSE Transport:
+
 ```jsonc
 {
     "mcpServers": {
@@ -116,6 +126,7 @@ nagios_pass: "your_nagios_core_password"
 
 - [Official setup guide](https://docs.windsurf.com/windsurf/cascade/mcp)
 - For setting up the server in [Windsurf](https://windsurf.com/), add the following lines to the `~/.codeium/windsurf/mcp_config.json` file.
+
 ```jsonc
 {
     "mcpServers": {
@@ -133,7 +144,9 @@ nagios_pass: "your_nagios_core_password"
     }
 }
 ```
+
 - For SSE Transport:
+
 ```jsonc
 {
     "mcpServers": {
@@ -148,6 +161,7 @@ nagios_pass: "your_nagios_core_password"
 
 - [Official setup guide](https://docs.cline.bot/mcp/configuring-mcp-servers)
 - For setting up the server in [Cline](https://cline.bot/), go to `MCP Servers` -> `Installed` -> `Configure MCP Servers`, this will open the `cline_mcp_settings.json` file. Add the following code block to the file.
+
 ```jsonc
 {
     "mcpServers": {
@@ -165,7 +179,9 @@ nagios_pass: "your_nagios_core_password"
     }
 }
 ```
+
 - For SSE Transport:
+
 ```jsonc
 {
     "mcpServers": {
