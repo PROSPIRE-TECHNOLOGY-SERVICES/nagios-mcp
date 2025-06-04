@@ -37,12 +37,10 @@ jobs:
 
           # Enable linting
           VALIDATE_PYTHON_RUFF: true
-          VALIDATE_YAML_PRETTIER: true
           VALIDATE_MARKDOWN_PRETTIER: true
 
           # Enable auto-formatting
           FIX_PYTHON_RUFF: true
-          FIX_YAML_PRETTIER: true
           FIX_MARKDOWN_PRETTIER: true
 
       - name: Commit and push linting fixes
