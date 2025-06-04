@@ -29,10 +29,11 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LOG_LEVEL: DEBUG
 
           # Linter configurations
           DEFAULT_BRANCH: main
-          VALIDATE_ALL_CODEBASE: true  # Only validate changed files on PRs
+          VALIDATE_ALL_CODEBASE: false  # Only validate changed files on PRs
 
           # Enable linting
           VALIDATE_PYTHON_RUFF: true
