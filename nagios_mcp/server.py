@@ -1,12 +1,12 @@
 import argparse
-import logging
-from typing import List, Dict, Any
 import json
-import yaml
+import logging
 from pathlib import Path
+from typing import Any, Dict, List
 
 import mcp.types as types
 import uvicorn
+import yaml
 from mcp.server import NotificationOptions, Server
 from mcp.server.models import InitializationOptions
 from mcp.server.sse import SseServerTransport
@@ -14,6 +14,7 @@ from mcp.server.stdio import stdio_server
 from starlette.applications import Starlette
 from starlette.responses import Response
 from starlette.routing import Mount, Route
+
 from .tools import (
     get_alerts,
     get_comment_by_id,
