@@ -46,6 +46,9 @@ jobs:
           # Config file
           PYTHON_RUFF_CONFIG_FILE: .ruff.toml
 
+          # Disable summary generation
+          SAVE_SUPER_LINTER_SUMMARY: false
+
       - name: Commit and push linting fixes
         if: github.event_name == 'pull_request' && github.ref_name != github.event.repository.default_branch
         uses: stefanzweifel/git-auto-commit-action@v5
