@@ -1,8 +1,6 @@
 # Super-linter summary
 
-| Language          | Validation result |
-| ----------------- | ----------------- |
-| MARKDOWN_PRETTIER | Pass ✅           |
-| PYTHON_RUFF       | Pass ✅           |
+| Language | Validation result |
+| -------- | ----------------- |
 
 All files and directories linted successfully
