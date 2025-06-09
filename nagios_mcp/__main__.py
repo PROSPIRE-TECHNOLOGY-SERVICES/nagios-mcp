@@ -4,15 +4,18 @@ Entry point for running nagios_mcp module
 
 import asyncio
 
-from .server import main
+from .server import main as server_main
 
-if __name__=="__main__":
+def main():
     import asyncio
     import logging
     import sys
 
     try:
-        asyncio.run(main())
+        asyncio.run(server_main())
     except KeyboardInterrupt:
         logging.info("Server stopped by user")
         sys.exit(0)
+
+if __name__=="__main__":
+    main()
