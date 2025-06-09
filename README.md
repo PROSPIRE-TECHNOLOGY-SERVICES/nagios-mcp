@@ -1,5 +1,9 @@
 # nagios-mcp
 
+![PyPI - Version](https://img.shields.io/pypi/v/nagios-mcp)
+![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FPROSPIRE-TECHNOLOGY-SERVICES%2Fnagios-mcp%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)
+[![License](https://img.shields.io/github/license/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp)](https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp/blob/main/LICENSE)
+
 MCP Server for Nagios Core.
 
 This server is built by us for the Nagios Core web-client.
@@ -27,10 +31,14 @@ Or installing using `pip`:
 pip install uv
 ```
 
-2. Cloning the repository
+2. Installing the PyPI package
 
 ```
-git clone https://github.com/PROSPIRE-TECHNOLOGY-SERVICES/nagios-mcp.git
+# Using pip
+pip install nagios-mcp # or pipx install nagios-mcp
+
+# Using uv (Recommended)
+uv tool install nagios-mcp
 ```
 
 3. Creating a config file
@@ -45,7 +53,7 @@ nagios_pass: "your_nagios_core_password"
 ### Starting the SSE server
 
 - The mcp server by default runs on STDIO transport. If you do not require SSE transport, you can skip this section.
-- Command: `uv run -m nagios_mcp --config NAGIOS_CONFIG_FILE --transport sse --host localhost --port 8000`
+- Command: `uvx nagios-mcp --config NAGIOS_CONFIG_FILE --transport sse --host localhost --port 8000`
 
 ### For Claude Desktop
 
@@ -59,13 +67,9 @@ nagios_pass: "your_nagios_core_password"
 {
   "mcpServers": {
     "nagios": {
-      "command": "uv",
+      "command": "uvx",
       "args": [
-        "--directory",
-        "/ABSOLUTE_PATH_TO/nagios-mcp",
-        "run",
-        "-m",
-        "nagios_mcp",
+        "nagios-mcp",
         "--config",
         "PATH_TO_THE_NAGIOS_CONFIG_FILE",
       ],
@@ -96,13 +100,9 @@ nagios_pass: "your_nagios_core_password"
 {
   "mcpServers": {
     "nagios": {
-        "command": "uv",
+        "command": "uvx",
         "args": [
-                "--directory",
-                "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
-                "run",
-                "-m",
-                "nagios_mcp",
+                "nagios-mcp",
                 "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
             ],
         }
@@ -131,13 +131,9 @@ nagios_pass: "your_nagios_core_password"
 {
     "mcpServers": {
         "nagios": {
-            "command": "uv",
+            "command": "uvx",
             "args": [
-                "--directory",
-                "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
-                "run",
-                "-m",
-                "nagios_mcp",
+                "nagios-mcp",
                 "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
             ],
         }
@@ -166,13 +162,9 @@ nagios_pass: "your_nagios_core_password"
 {
     "mcpServers": {
         "nagios": {
-            "command": "uv",
+            "command": "uvx",
             "args": [
-                "--directory",
-                "/ABSOLUTE_PATH_TO/nagios-mcp", # Make sure this directory is correct
-                "run",
-                "-m",
-                "nagios_mcp",
+                "nagios-mcp",
                 "--config", "PATH_TO_THE_NAGIOS_CONFIG_FILE"
             ],
         }
@@ -198,7 +190,7 @@ nagios_pass: "your_nagios_core_password"
 
 1. Tool Key: `Nagios`
 2. Name: `NagiosMCP`
-3. Command: `uv --directory /ABSOLUTE_PATH_TO/nagios-mcp run -m nagios_mcp --config PATH_TO_THE_NAGIOS_CONFIG_FILE`
+3. Command: `uvx nagios-mcp --config PATH_TO_THE_NAGIOS_CONFIG_FILE`
 
 ### List of Tools:
 

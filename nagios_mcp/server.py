@@ -217,7 +217,7 @@ async def main():
             return 1
     else:
         print("No configuration file specified. Use --config to specify a config file.")
-        print("Example: uv run -m nagios_mcp --config nagios_config.yaml")
+        print("Example: uvx nagios-mcp --config nagios_config.yaml")
         return 1
 
     if args.transport == "sse":
