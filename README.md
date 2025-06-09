@@ -1,5 +1,6 @@
 # nagios-mcp
 ![PyPI - Version](https://img.shields.io/pypi/v/nagios-mcp)
+
 MCP Server for Nagios Core.
 
 This server is built by us for the Nagios Core web-client.
