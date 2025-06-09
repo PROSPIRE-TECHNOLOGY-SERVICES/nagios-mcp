@@ -10,3 +10,6 @@ dependencies = [
     "pyyaml>=6.0.2",
     "requests>=2.32.3",
 ]
+
+[project.scripts]
+nagios-mcp = "nagios_mcp.server:main"
