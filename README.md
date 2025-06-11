@@ -14,23 +14,7 @@ More specifically the `statusjson.cgi` and `objectjson.cgi` files for the purpos
 
 ### Setting up
 
-1. Installing `uv`
-   - Linux or MacOS or WSL:
-     ```bash
-     curl -LsSf https://astral.sh/uv/install.sh | sh
-     ```
-   - Windows:
-     ```
-     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-     ```
-
-Or installing using `pip`:
-
-```bash
-pip install uv
-```
-
-2. Installing the PyPI package
+1. Installing the PyPI package
 
 ```
 # Using pip
