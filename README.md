@@ -1,4 +1,5 @@
 # nagios-mcp
+![](https://badge.mcpx.dev?type=server 'MCP Server')
 ![PyPI - Version](https://img.shields.io/pypi/v/nagios-mcp)
 ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FPROSPIRE-TECHNOLOGY-SERVICES%2Fnagios-mcp%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)
 
