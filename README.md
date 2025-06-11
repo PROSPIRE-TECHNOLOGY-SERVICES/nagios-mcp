@@ -24,7 +24,7 @@ pip install nagios-mcp # or pipx install nagios-mcp
 uv tool install nagios-mcp
 ```
 
-3. Creating a config file
+2. Creating a config file
    Create a `nagios_config.yaml` or `nagios_config.json` file with the configuration parameters given below.
 
 ```yaml
