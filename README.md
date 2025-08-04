@@ -31,6 +31,7 @@ uv tool install nagios-mcp
 nagios_url: "http://localhost/nagios"
 nagios_user: "your_nagios_core_username"
 nagios_pass: "your_nagios_core_password"
+ca_cert_path: "path_to_your_ssl_cert" # if the url is https, otherwise leave it empty ("")
 ```
 
 ### Starting the SSE server

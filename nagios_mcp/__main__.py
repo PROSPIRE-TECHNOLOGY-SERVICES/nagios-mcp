@@ -6,8 +6,8 @@ import asyncio
 
 from .server import main as server_main
 
+
 def main():
-    import asyncio
     import logging
     import sys
 
