@@ -66,7 +66,7 @@ def load_config(config_path: str) -> Dict[str, Any]:
 
 def validate_config(config: Dict[str, Any]) -> None:
     """Validate that required configuration keys are present"""
-    required_keys = ["nagios_url", "nagios_user", "nagios_pass"]
+    required_keys = ["nagios_url", "nagios_user", "nagios_pass", "ca_cert_path"]
     missing_keys = [key for key in required_keys if key not in config]
 
     if missing_keys:

@@ -7,15 +7,16 @@ from requests.auth import HTTPBasicAuth
 NAGIOS_URL = None
 NAGIOS_USER = None
 NAGIOS_PASS = None
+CA_CERT_PATH = None
 cgi_url = None
 auth = None
 session = None
-common_format_options = "whitespace+enumerate+bitmask+duration"
+common_format_options = "whitespace enumerate bitmask duration"
 
 
-def initialize_nagios_config(nagios_url: str, nagios_user: str, nagios_pass: str):
+def initialize_nagios_config(nagios_url: str, nagios_user: str, nagios_pass: str, ca_cert_path: Optional[str]=None):
     """Initialize Nagios Configuration from provided parameters"""
-    global NAGIOS_URL, NAGIOS_USER, NAGIOS_PASS, cgi_url, auth, session
+    global NAGIOS_URL, NAGIOS_USER, NAGIOS_PASS, CA_CERT_PATH, cgi_url, auth, session
 
     NAGIOS_URL = nagios_url
     NAGIOS_USER = nagios_user
@@ -29,6 +30,14 @@ def initialize_nagios_config(nagios_url: str, nagios_user: str, nagios_pass: str
     auth = HTTPBasicAuth(NAGIOS_USER, NAGIOS_PASS)
     session = requests.session()
     session.auth = auth
+
+    if NAGIOS_URL.startswith("https://"):
+        if ca_cert_path:
+            session.verify = ca_cert_path
+        else:
+            session.verify = False
+    else:
+        session.verify = False
 
 def _check_config():
     """Check if configuration has been initialized"""

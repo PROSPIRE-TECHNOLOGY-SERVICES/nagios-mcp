@@ -1,6 +1,6 @@
 [project]
 name = "nagios-mcp"
-version = "0.1.3"
+version = "0.1.4"
 description = "MCP Server for Nagios Core"
 authors = [
     {name = "Umang Kaushik", email = "umang.kaushik@prospiretech.com"}
