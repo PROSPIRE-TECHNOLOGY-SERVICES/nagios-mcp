@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/prospire-technology-services-nagios-mcp-badge.png)](https://mseep.ai/app/prospire-technology-services-nagios-mcp)
+
 # nagios-mcp
 ![](https://badge.mcpx.dev?type=server 'MCP Server')
 ![PyPI - Version](https://img.shields.io/pypi/v/nagios-mcp)
